@@ -7,6 +7,7 @@ C_SRCS += \
 ../DIO_program.c \
 ../Interrupt_program.c \
 ../KEYPAD_program.c \
+../LED_program.c \
 ../Motor.c \
 ../PWM.c \
 ../Timer.c \
@@ -16,6 +17,7 @@ OBJS += \
 ./DIO_program.o \
 ./Interrupt_program.o \
 ./KEYPAD_program.o \
+./LED_program.o \
 ./Motor.o \
 ./PWM.o \
 ./Timer.o \
@@ -25,6 +27,7 @@ C_DEPS += \
 ./DIO_program.d \
 ./Interrupt_program.d \
 ./KEYPAD_program.d \
+./LED_program.d \
 ./Motor.d \
 ./PWM.d \
 ./Timer.d \

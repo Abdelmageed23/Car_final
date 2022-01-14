@@ -1,9 +1,3 @@
-/*
- * //#include<util/delay.h>
- * delay(25ms)
- */
-
-
 #include "STD_TYPES.h"
 
 #include "DIO_interface.h"

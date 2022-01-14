@@ -7,12 +7,11 @@
 
 #include "BIT_MATH.h"
 #include "STD_TYPES.h"
-#include "DIO_interface.h"
+
 #include "Interrupt_interface.h"
 #include "KEYPAD_interface.h"
-
 #include "Motor.h"
-
+#include "LED_interface.h"
 
 
 #define SPEED_BUTTON	8
@@ -22,66 +21,25 @@
 
 #define PRESSED			1
 #define NOT_PRESSED		0
-/*
- *
-void KPD_init(void);
 
-uint8_t KPD_u8GetPressedKey(void);
- *
- *
- *
-MOTORS_init(uint8_t numMotor);// numMotor (initalize Direction pins only (PWM initializes enable pins inside them))
-MOTOR_speed(uint8_t dutyCycle);//  30/60/90 (Start PWM and initialize duty cycle)
-MOTOR_direction(uint8_t numMotor, uint8_t DIR);//  numMotor/(FWD,REV) (Set direction of specified motor) i.e (MOTOR_1, FWD) meaning motor 1, move forward
-MOTOR_off(uint8_t numMotor);// stop specified motor (writes LOW on DIR data pins)
- *
- */
+void MOVE_REV(void);
+void MOVE_FWD(void);
+void MOVE_LEFT(void);
+void MOVE_RIGHT(void);
+void MOTORS_OFF();
+void LEDS_INIT(void);
 
-void MOVE_REV(void)
-{
-	MOTOR_direction(MOTOR_1, REV);
-	MOTOR_direction(MOTOR_2, REV);
-}
-
-void MOVE_FWD(void)
-{
-	MOTOR_direction(MOTOR_1, FWD);
-	MOTOR_direction(MOTOR_2, FWD);
-}
-
-void MOVE_LEFT(void)
-{
-	MOTOR_direction(MOTOR_1, FWD);
-	MOTOR_direction(MOTOR_2, REV);
-}
-
-void MOVE_RIGHT(void)
-{
-	MOTOR_direction(MOTOR_1, REV);
-	MOTOR_direction(MOTOR_2, FWD);
-}
-
-void MOTORS_OFF()
-{
-	MOTOR_off(MOTOR_1);
-	MOTOR_off(MOTOR_2);
-}
 
 void main()
 {
-	GlobalInerruptEnable();
+	 GlobalInerruptEnable();
 	 KPD_init();
 	 MOTOR_init(MOTOR_1);
 	 MOTOR_init(MOTOR_2);
 
 	 uint8_t Speed_level =0;
-	 uint8_t key=0;
 
-
-	 DIO_SETpinDir(DIO_PORTB,4,1);
-	 DIO_SETpinDir(DIO_PORTB,5,1);
-	 DIO_SETpinDir(DIO_PORTB,6,1);
-	 DIO_SETpinDir(DIO_PORTB,7,1);
+	 LEDS_INIT();
 
 	while(1)
 	{
@@ -95,28 +53,28 @@ void main()
 			switch (Speed_level)
 			{
 			case  1:
-				DIO_SETpinVal(DIO_PORTB,4,1);
-				DIO_SETpinVal(DIO_PORTB,5,0);
-				DIO_SETpinVal(DIO_PORTB,6,0);
-				DIO_SETpinVal(DIO_PORTB,7,0);
+				 LED_ON(LED_PORTB,4);
+				LED_OFF(LED_PORTB,5);
+				LED_OFF(LED_PORTB,6);
+				LED_OFF(LED_PORTB,7);
 			break;
 			case  2:
-				DIO_SETpinVal(DIO_PORTB,4,0);
-				DIO_SETpinVal(DIO_PORTB,5,1);
-				DIO_SETpinVal(DIO_PORTB,6,0);
-				DIO_SETpinVal(DIO_PORTB,7,0);
+				LED_OFF(LED_PORTB,4);
+				 LED_ON(LED_PORTB,5);
+				LED_OFF(LED_PORTB,6);
+				LED_OFF(LED_PORTB,7);
 			break;
 			case 3:
-				DIO_SETpinVal(DIO_PORTB,4,0);
-				DIO_SETpinVal(DIO_PORTB,5,0);
-				DIO_SETpinVal(DIO_PORTB,6,1);
-				DIO_SETpinVal(DIO_PORTB,7,0);
+				LED_OFF(LED_PORTB,4);
+				LED_OFF(LED_PORTB,5);
+				 LED_ON(LED_PORTB,6);
+				LED_OFF(LED_PORTB,7);
 			break;
 			case  4:
-				DIO_SETpinVal(DIO_PORTB,4,0);
-				DIO_SETpinVal(DIO_PORTB,5,0);
-				DIO_SETpinVal(DIO_PORTB,6,0);
-				DIO_SETpinVal(DIO_PORTB,7,1);
+				LED_OFF(LED_PORTB,4);
+				LED_OFF(LED_PORTB,5);
+				LED_OFF(LED_PORTB,6);
+				 LED_ON(LED_PORTB,7);
 			break;
 			}
 			while(SPEED_BUTTON == KPD_u8GetPressedKey())
@@ -167,3 +125,41 @@ void main()
 }
 
 
+void MOVE_REV(void)
+{
+	MOTOR_direction(MOTOR_1, REV);
+	MOTOR_direction(MOTOR_2, REV);
+}
+
+void MOVE_FWD(void)
+{
+	MOTOR_direction(MOTOR_1, FWD);
+	MOTOR_direction(MOTOR_2, FWD);
+}
+
+void MOVE_RIGHT(void)
+{
+	MOTOR_direction(MOTOR_1, FWD);
+	MOTOR_direction(MOTOR_2, REV);
+}
+
+void MOVE_LEFT(void)
+{
+	MOTOR_direction(MOTOR_1, REV);
+	MOTOR_direction(MOTOR_2, FWD);
+}
+
+void MOTORS_OFF()
+{
+	MOTOR_off(MOTOR_1);
+	MOTOR_off(MOTOR_2);
+}
+
+void LEDS_INIT(void)
+{
+	LED_init(LED_PORTB,4);
+	LED_init(LED_PORTB,5);
+	LED_init(LED_PORTB,6);
+	LED_init(LED_PORTB,7);
+
+}
